@@ -15,10 +15,10 @@ from turtle import clear
 
 
 
-file = open( 'config.json','r' )
+file = open('config.json','r')
 config = json.load(file)
 intents = discord.Intents.all()
-bot = commands.Bot( config['prefix'],intents=intents )
+bot = commands.Bot(config['prefix'],intents=intents)
 
 
 @bot.remove_command( 'help' )
@@ -33,19 +33,19 @@ async def help(ctx, arg = None): # Украшения для команды help
         emb.set_thumbnail(url = "https://i.ytimg.com/vi/FpBikhF6SqI/maxresdefault.jpg")
     elif arg == 'basic':
         emb = discord.Embed(title= '   Основные команды    ', color= discord.Colour.dark_gold())
-        emb.add_field( name = ( 'v.info') , value= 'Информация о Vilonka bot', inline= False )
+        emb.add_field( name = ('v.info') , value= 'Информация о Vilonka bot', inline= False)
     elif arg == 'mod':
         emb = discord.Embed(title= '     Команды для модераторов: ', color= discord.Colour.dark_gold())
-        emb.add_field( name = ( 'v.ban') , value= 'Банит пользователя на сервере', inline= False )
-        emb.add_field( name = ( 'v.unban') , value= 'Банит пользователя на сервере', inline= False )
-        emb.add_field( name = ( 'v.kick' ), value= 'Кикает человека с сервера', inline= False )
-        emb.add_field( name = ( 'v.clear' ), value= 'Удаление сообщений', inline= False )
+        emb.add_field( name = ('v.ban') , value= 'Банит пользователя на сервере', inline= False)
+        emb.add_field( name = ('v.unban') , value= 'Банит пользователя на сервере', inline= False)
+        emb.add_field( name = ('v.kick'), value= 'Кикает человека с сервера', inline= False)
+        emb.add_field( name = ('v.clear'), value= 'Удаление сообщений', inline= False)
     elif arg == 'more':
         emb = discord.Embed(title= '     Разные команды ', color= discord.Colour.dark_gold())
-        emb.add_field( name = ( 'v.орел_решка' ), value= 'Подбрасывает монетку', inline= False )
-        emb.add_field( name = ( 'v.say' ), value= 'Бот отправляет сообщение что написал пользователь' , inline= False)
+        emb.add_field( name = ('v.орел_решка'), value= 'Подбрасывает монетку', inline= False )
+        emb.add_field( name = ('v.say' ), value= 'Бот отправляет сообщение что написал пользователь' , inline= False)
     else:
-        member = ctx.author # получаем автора сообщения
+        member = ctx.author # Пишет в лс пользователю что он получил достижение 
         embed = discord.Embed(title="Вы допустили ошибку.", colour=0xFFFFFF, description="Провельте правильно ли написана команда хелп") #Поля не должны быть пустыми.
         await ctx.channel.send(embed=embed)
         await member.send("Ты получил достижение ｓｅｃｒｅｔ    ｉｎ    ｈｅｌｐ ;Ｄ , что бы получить достижение напиши мне в лс и скинь док-ва.")
@@ -54,17 +54,17 @@ async def help(ctx, arg = None): # Украшения для команды help
     await ctx.send( embed = emb )
 
 
-@bot.command( name= 'say' ) # бот отправляет тоже самое сообщение что написал пользователь и удаляет сообщение пользователя
-@commands.has_permissions( administrator=True )
-async def say( ctx, *, arg ):
+@bot.command(name= 'say') # бот отправляет тоже самое сообщение что написал пользователь и удаляет сообщение пользователя
+@commands.has_permissions(administrator=True)
+async def say(ctx, *, arg):
     await ctx.message.delete() #Удаляем сообщение автора команды
-    await ctx.send( arg ) 
+    await ctx.send(arg) 
 
 
 @bot.event # показывает что бот онлайн + в его статусе на скольких он серверах 
 async def on_ready():
-    print( 'Bot online' )
-    print( f'name bot = {bot.user.name}' )
+    print('Bot online')
+    print(f'name bot = {bot.user.name}')
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f" я нахожусь на {len(bot.guilds)} серверах."))
 
 
@@ -86,40 +86,40 @@ async def info(ctx):
 #               ТЕГ В ДИСКОРДЕ СПЕЦИЛЬАОГО ЧЕЛОВЕК <@А СЮДА ЕГО ID>
 
 
-@bot.command( name='орел_решка' ) #орел или решка
+@bot.command(name='орел_решка') #орел или решка
 async def орел_решка(ctx):
     choice = random.randint(0, 100) # случайное число от 0 до 100
     if choice <= 49:
-        await ctx.send( f'{ ctx.author.mention } Выпал Орел!' )
+        await ctx.send(f'{ ctx.author.mention } Выпал Орел!')
     elif 50<=choice<99:
-        await ctx.send( f'{ ctx.author.mention } Выпала решка!' )
+        await ctx.send(f'{ ctx.author.mention } Выпала решка!')
     elif 99<=choice:
-       await ctx.send( f'{ ctx.author.mention } Ну надоели со своим орлом и решкой 💀' )
+       await ctx.send(f'{ ctx.author.mention } Ну надоели со своим орлом и решкой 💀')
 
 
-@bot.command( name='kick' ) # кикает с сервера (надо доделать)
+@bot.command(name='kick') # кикает с сервера (надо доделать)
 @commands.has_permissions( administrator=True )
-async def kick( ctx, member: discord.Member, *, reason=None ):
+async def kick(ctx, member: discord.Member, *, reason=None):
                 await member.kick()
-                await ctx.send( f'Пользователь { member.mention } был кикнут с сервера. Причина:  { reason }. Давайте все ему скажем покаааааааааа.' )
+                await ctx.send(f'Пользователь { member.mention } был кикнут с сервера. Причина:  { reason }. Давайте все ему скажем покаааааааааа.')
 
 
 
-# @bot.command( name='ban' ) # кикает с сервера (надо доделать)
-# @commands.has_permissions( administrator=True )
+# @bot.command(name='ban') # кикает с сервера (надо доделать)
+# @commands.has_permissions(administrator=True)
 # async def ban( ctx, member: discord.Member, *, reason=None ):
 #     if administrator == True:
 #         await member.ban()
-#         await ctx.send( f'Пользователь { member.mention } был забанен на сервере. Причина:  { reason }. Давайте все ему скажем покаааааааааа.' )
+#         await ctx.send(f'Пользователь { member.mention } был забанен на сервере. Причина:  {reason}. Давайте все ему скажем покаааааааааа.')
 #     else:
-#         await ctx.send( f'{ctx.author.mention } Вы феменистка и у вас нет прав прав а а ')
+#         await ctx.send(f'{ctx.author.mention } Вы феменистка и у вас нет прав прав а а ')
 
 
 
-@bot.command( name='clear' ) # удаляет сообщения в чате 
-@commands.has_permissions( manage_messages=True )
-async def clear( ctx, amount=20 ): #число 20 - это число удалённых сообщений, если число не указано
-    await ctx.channel.purge( limit=amount )
+@bot.command(name='clear') # удаляет сообщения в чате 
+@commands.has_permissions(manage_messages=True)
+async def clear(ctx, amount=20): #число 20 - это число удалённых сообщений, если число не указано
+    await ctx.channel.purge(limit=amount)
 
 # async def clear_error(ctx, error):
 #     if isinstance(error, commands.MissingPermissions):
@@ -128,4 +128,4 @@ async def clear( ctx, amount=20 ): #число 20 - это число удалё
 
 
 
-bot.run( config['token'] )
+bot.run(config['token'])
