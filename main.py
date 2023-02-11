@@ -1,4 +1,3 @@
-
 import discord 
 import random
 import json
@@ -8,6 +7,7 @@ import asyncio
 import time
 from discord import *
 from discord.ext import commands
+from discord.ext.commands import guild_only
 from discord import Embed
 from asyncio import sleep
 from discord.ext.commands import Bot
@@ -37,7 +37,7 @@ async def help(ctx, arg = None): # Украшения для команды help
     elif arg == 'mod':
         emb = discord.Embed(title= '     Команды для модераторов: ', color= discord.Colour.dark_gold())
         emb.add_field( name = ('v.ban') , value= 'Банит пользователя на сервере', inline= False)
-        emb.add_field( name = ('v.unban') , value= 'Банит пользователя на сервере', inline= False)
+        emb.add_field( name = ('v.unban') , value= 'Разбанивает пользователя на сервере', inline= False)
         emb.add_field( name = ('v.kick'), value= 'Кикает человека с сервера', inline= False)
         emb.add_field( name = ('v.clear'), value= 'Удаление сообщений', inline= False)
     elif arg == 'more':
@@ -85,6 +85,45 @@ async def info(ctx):
 
 #               ТЕГ В ДИСКОРДЕ СПЕЦИЛЬАОГО ЧЕЛОВЕК <@А СЮДА ЕГО ID>
 
+@bot.command(name='banv') # кикает с сервера (надо доделать)
+@commands.has_permissions(administrator=True)
+async def banv(ctx, member: discord.Member, *, reason=None):
+    await member.ban()
+    await ctx.send(f'Пользователь { member.mention } был забанен на сервере. Причина:  {reason}. Давайте все ему скажем покаааааааааа.')
+
+
+@bot.command(name='unbanv')
+@guild_only()  # Might not need ()
+async def unbanv(ctx, id: int):
+    user = await bot.fetch_user(id)
+    await ctx.guild.unban(user)
+
+
+# @bot.command(name = 'unbanv')
+# async def unbanv(ctx, *, member):
+#     member_name, member.discriminator = member.split('#')
+
+#     async for entry in ctx.guild.bans():
+#         user = entry.user
+
+#         if (user.name, user.discriminator) == (member_name, member.discriminator):
+#             await ctx.guild.unban(user)
+#             await ctx.send(f'{user.name}#{user.disriminator} Успешно разблокирован')
+#             return
+
+
+@bot.command(name='kickv') # кикает с сервера (надо доделать)
+@commands.has_permissions( administrator=True )
+async def kickv(ctx, member: discord.Member, *, reason=None):
+                await member.kick()
+                await ctx.send(f'Пользователь { member.mention } был кикнут с сервера. Причина:  { reason }. Давайте все ему скажем покаааааааааа.')
+
+
+@bot.command(name='clear') # удаляет сообщения в чате 
+@commands.has_permissions(manage_messages=True)
+async def clear(ctx, amount=20): #число 20 - это число удалённых сообщений, если число не указано
+    await ctx.channel.purge(limit=amount)
+
 
 @bot.command(name='орел_решка') #орел или решка
 async def орел_решка(ctx):
@@ -97,35 +136,12 @@ async def орел_решка(ctx):
        await ctx.send(f'{ ctx.author.mention } Ну надоели со своим орлом и решкой 💀')
 
 
-@bot.command(name='kick') # кикает с сервера (надо доделать)
-@commands.has_permissions( administrator=True )
-async def kick(ctx, member: discord.Member, *, reason=None):
-                await member.kick()
-                await ctx.send(f'Пользователь { member.mention } был кикнут с сервера. Причина:  { reason }. Давайте все ему скажем покаааааааааа.')
 
-
-
-# @bot.command(name='ban') # кикает с сервера (надо доделать)
-# @commands.has_permissions(administrator=True)
-# async def ban( ctx, member: discord.Member, *, reason=None ):
-#     if administrator == True:
-#         await member.ban()
-#         await ctx.send(f'Пользователь { member.mention } был забанен на сервере. Причина:  {reason}. Давайте все ему скажем покаааааааааа.')
-#     else:
-#         await ctx.send(f'{ctx.author.mention } Вы феменистка и у вас нет прав прав а а ')
-
-
-
-@bot.command(name='clear') # удаляет сообщения в чате 
-@commands.has_permissions(manage_messages=True)
-async def clear(ctx, amount=20): #число 20 - это число удалённых сообщений, если число не указано
-    await ctx.channel.purge(limit=amount)
-
-# async def clear_error(ctx, error):
+                
+# @bot.event
+# async def on_command_error(ctx, error):
 #     if isinstance(error, commands.MissingPermissions):
-#         await ctx.send( f'{ctx.author.mention } Вы феменистка и у вас нет прав прав а а ')
-
-
+#          await ctx.send(f'{ctx.author.mention } Вы феменистка и у вас нет прав прав а а ')
 
 
 bot.run(config['token'])
